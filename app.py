@@ -41,31 +41,30 @@ class PlayerBoard:
         self.wall = [[False] * 5 for _ in range(5)]
         self.floor_line = []
         self.score = 0
-    
+
     def can_place_in_pattern_line(self, row: int, color: str, count: int) -> bool:
         """Check if tiles can be placed in a pattern line"""
         if row < 0 or row >= 5:
             return False
-        
+
         pattern_line = self.pattern_lines[row]
         max_size = PATTERN_LINE_SIZES[row]
-        
+
         # Check if line is already full
         if len(pattern_line) >= max_size:
             return False
 
         # Check if line is empty or contains same color
-        #TODO it's allowed to add to the same color line, that's how you fill in a line
         if pattern_line and pattern_line[0] != color:
             return False
-        
+
         # Check if this color is already on the wall for this row
         wall_col = WALL_PATTERN[row].index(color)
         if self.wall[row][wall_col]:
             return False
-        
+
         return True
-    
+
     def place_tiles(self, row: int, color: str, count: int):
         """Place tiles in pattern line or floor line"""
         if row == -1:  # Floor line
