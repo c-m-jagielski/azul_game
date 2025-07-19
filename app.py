@@ -53,12 +53,7 @@ class PlayerBoard:
         # Check if line is already full
         if len(pattern_line) >= max_size:
             return False
-        
-        # Check if adding tiles would exceed capacity
-        #TODO this is allowed, because any extra tiles would go to your floor
-        if len(pattern_line) + count > max_size:
-            return False
-        
+
         # Check if line is empty or contains same color
         #TODO it's allowed to add to the same color line, that's how you fill in a line
         if pattern_line and pattern_line[0] != color:
