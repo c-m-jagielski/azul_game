@@ -336,15 +336,44 @@ game = GameState()
 
 # AI Logic
 class SimpleAI:
-    """Simple random AI that picks valid moves randomly"""
-    
+    """A simple heuristic-based AI for Azul"""
+
+    @staticmethod
+    def score_move(game_state: GameState, move: dict) -> float:
+        player = game_state.players[1]
+        score = 0.0
+
+        # Reward wall placement score
+        if move['target_row'] >= 0:
+            row = move['target_row']
+            color = move['color']
+            col = WALL_PATTERN[row].index(color)
+            score += game_state.calculate_tile_score(player, row, col)
+
+        # Reward completing a pattern line this turn
+        if move['target_row'] >= 0:
+            current_fill = len(player.pattern_lines[move['target_row']])
+            capacity = PATTERN_LINE_SIZES[move['target_row']]
+            if current_fill + move['count'] >= capacity:
+                score += 3.0
+
+        # Penalize floor placement
+        if move['target_row'] == -1:
+            score -= 3.0
+
+        # Weakly penalize taking from center (first player token cost)
+        if move['source'] == 'center' and game_state.first_player_token:
+            score -= 1.0
+
+        return score
+
     @staticmethod
     def get_move(game_state: GameState) -> Dict:
-        """Get a random valid move"""
+        """Get a valid move"""
         moves = game_state.get_available_moves()
         if not moves:
             return None
-        return random.choice(moves)
+        return max(moves, key=lambda m: SimpleAI.score_move(game_state, m))
 
 # Flask Routes
 @app.route('/')
