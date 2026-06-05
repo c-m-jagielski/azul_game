@@ -195,7 +195,8 @@ class GameState:
             
             # Move remaining tiles to center
             self.center.extend(remaining_tiles)
-            
+            self.center.sort()  # Optional: keep center sorted for easier display
+
             # Clear factory
             self.factories[move['source_idx']] = []
             
