@@ -63,6 +63,11 @@ class PlayerBoard:
         if self.wall[row][wall_col]:
             return False
 
+        # Check if this color is already in a different pattern line this round
+        for other_row in range(5):
+            if other_row != row and self.pattern_lines[other_row] and self.pattern_lines[other_row][0] == color:
+                return False
+
         return True
 
     def place_tiles(self, row: int, color: str, count: int):
